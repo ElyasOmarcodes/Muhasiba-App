@@ -6,9 +6,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
+      # ۱. د جاوا سمه نسخه (د تېرې ستونزې حل)
       - name: set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -18,27 +21,48 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          # د ډانلوډ او شریکولو لپاره دا پلګینونه اضافه شول
-          npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/share @capacitor/filesystem
+          npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/assets
 
       - name: Build Web App
         run: npm run build
 
       - name: Sync with Capacitor
         run: |
-          # دلته د "My Mohasiba" پر ځای د خپل اپلیکیشن نوم ولیکه
-          npx cap init "محاسبه" "com.elyasomar.muhasiba" --web-dir dist
+          # دلته "My New App" په خپل نوم بدل کړه (دا به د موبایل په مینو کې ښکاري)
+          npx cap init "مُحاسِبه" "com.elyasomar.muhasiba" --web-dir dist
           npx cap add android
           npx cap copy android
 
-      # که غواړې آیکن بدل کړې:
-      # ۱. یوه تصویر د "logo.png" په نوم د ګیټ هاب په اصلي فولډر کې اپلوډ کړه
-      # ۲. بیا دا لاندې ۳ کرښې له "کامينټ" څخه وباسه (# نښه ترې لرې کړه)
-      # - name: Generate Icon
-      #   run: |
-      #     npm install @capacitor/assets
-      #     npx capacitor-assets generate --android --icon logo.png
+      # ۲. د آیکن بدلول (شرط: باید logo.png فایل موجود وي)
+      - name: Generate Icon
+        run: |
+          if [ -f "logo.png" ]; then
+            npx capacitor-assets generate --android --icon logo.png
+          else
+            echo "Warning: logo.png not found, skipping icon generation."
+          fi
 
+      # ۳. د نوم او ډاونلوډ ستونزې لپاره د Android فایلونو هک کول (Hack)
+      # دا برخه ستاسو د ډاونلوډ ستونزه د امنیتي اجازو په ورکولو سره حل کوي
+      - name: Inject Permissions and Fix Name
+        run: |
+          cd android/app/src/main
+          
+          # د اپلیکیشن نوم په strings.xml کې تغیر کوو
+          # که غواړې نوم بدل کړې، دلته د "My New App" پر ځای بل نوم ولیکه
+          sed -i 's/>Mohasiba</>My New App</g' res/values/strings.xml
+          
+          # په AndroidManifest.xml کې د انټرنیټ او سټوریج اجازې په زور ورزیاتوو
+          # دا د دې لپاره ده چې ډاونلوډ کار وکړي
+          sed -i 's/<application/<uses-permission android:name="android.permission.INTERNET" \/>\n    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"\/>\n    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" \/>\n    <application/g' AndroidManifest.xml
+          
+          # د ډاونلوډ لپاره "ClearText" او "Legacy Storage" فعاله کوو
+          sed -i 's/<application/<application android:usesCleartextTraffic="true" android:requestLegacyExternalStorage="true"/g' AndroidManifest.xml
+          
+          # چاپ یې کړه چې ډاډه شو تغیرات راغلل
+          cat AndroidManifest.xml
+
+      # ۴. د Kotlin د تکراري فایلونو ستونزه (هماغه پخوانی حل)
       - name: Fix Kotlin Dependency Conflict
         run: |
           cd android
