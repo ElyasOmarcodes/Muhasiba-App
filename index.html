@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>محاسبه Mohasiba</title>
+    <meta name="theme-color" id="theme-color-meta" content="#064e3b">
+    <link rel="icon" href="https://api.iconify.design/ri:moon-clear-fill.svg?color=%23059669">
+    
+    <!-- Scripts & Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: 'var(--primary-color)',
+                        // Custom surface color for dark mode elevation
+                        surface: {
+                            light: '#ffffff',
+                            dark: '#141414'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root { --primary-color: #059669; }
+        body {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
+        .primary-bg { background-color: var(--primary-color) !important; }
+        .primary-text { color: var(--primary-color) !important; }
+        .primary-border { border-color: var(--primary-color) !important; }
+        .primary-ring { --tw-ring-color: var(--primary-color) !important; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.4s ease-out forwards; }
+
+        @keyframes pulse-soft { 0%, 100% { opacity: 0.1; transform: scale(1.5) blur(40px); } 50% { opacity: 0.2; transform: scale(1.7) blur(50px); } }
+        .animate-pulse-soft { animation: pulse-soft 4s infinite ease-in-out; }
+
+        /* Islamic Geometric Background pattern */
+        .islamic-pattern {
+            background-image: radial-gradient(var(--primary-color) 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            opacity: 0.05;
+        }
+
+        /* Dark Mode Global Fixes */
+        .dark body { background-color: #000000 !important; color: #ffffff !important; }
+        .dark #root { background-color: #000000 !important; }
+        .dark .bg-gray-50 { background-color: #000000 !important; }
+        
+        /* Elevated surface in dark mode */
+        .dark .bg-white { background-color: #121212 !important; color: #ffffff !important; }
+        .dark .text-gray-900, .dark .text-gray-800, .dark .text-gray-700 { color: #ffffff !important; }
+        .dark .text-gray-600, .dark .text-gray-500 { color: #a1a1aa !important; }
+        
+        /* Borders for distinction in dark mode */
+        .dark .border-gray-100, .dark .border-gray-50, .dark .border-gray-200 { border-color: #222222 !important; }
+        .dark .border-transparent { border-color: transparent !important; }
+        
+        /* Modal and Nav dark mode specifically */
+        .dark nav { background-color: rgba(22, 22, 22, 0.98) !important; border-top-color: #2a2a2a !important; }
+        .dark .modal-content { background-color: #161616 !important; border-color: #2a2a2a !important; }
+
+        /* Custom scrollbar for dark mode detail views */
+        .dark *::-webkit-scrollbar { width: 4px; }
+        .dark *::-webkit-scrollbar-track { background: #000000; }
+        .dark *::-webkit-scrollbar-thumb { background: #333333; border-radius: 10px; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react-date-object": "https://esm.sh/react-date-object@^2.1.9",
+    "react-date-object/": "https://esm.sh/react-date-object@^2.1.9/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-gray-50 text-gray-900 transition-colors duration-500">
+    <div id="root"></div>
+    <script type="module" src="index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
